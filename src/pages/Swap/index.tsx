@@ -266,6 +266,7 @@ export default function Swap() {
 
   return (
     <>
+    
       <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
         tokens={urlLoadedTokens}
