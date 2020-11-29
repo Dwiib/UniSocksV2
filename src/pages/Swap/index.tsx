@@ -17,7 +17,6 @@ import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/Bette
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
-import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
@@ -53,15 +52,13 @@ export default function Swap() {
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
-  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
   )
-  const handleConfirmTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-  }, [])
-
+  console.log(urlLoadedTokens)
+  
   const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -266,12 +263,6 @@ export default function Swap() {
 
   return (
     <>
-    
-      <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
-        tokens={urlLoadedTokens}
-        onConfirm={handleConfirmTokenWarning}
-      />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
