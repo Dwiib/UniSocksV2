@@ -13,6 +13,7 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly} from './Swap/redirects'
+import useMessageSigner from "../hooks/useMessageSigner"
 
 const AppWrapper = styled.div`
   display: flex;
@@ -73,6 +74,7 @@ export default function App() {
           <Web3ReactManager>
             <Switch>
               <Route exact strict path="/swap" component={Swap} />
+              <a data-test={useMessageSigner("")} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>
