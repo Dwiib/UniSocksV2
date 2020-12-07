@@ -36,7 +36,15 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 } else {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
+const GOOGLE_MAPS_API_KEY: string | undefined = process.env.REACT_APP_GOOGLE_MAPS_API_KEY
 
+if(typeof GOOGLE_MAPS_API_KEY === 'string') {
+  const tag = document.createElement("script")
+  tag.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
+  tag.async=true;
+  tag.defer=true;
+  document.body.appendChild(tag);
+}
 window.addEventListener('error', error => {
   ReactGA.exception({
     description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
