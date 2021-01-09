@@ -1,23 +1,26 @@
 import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
 import styled from 'styled-components'
+import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ExternalLink } from '../../theme'
 
-
+const StyledMenuIcon = styled(MenuIcon)`
+  path {
+    stroke: ${({ theme }) => theme.text1};
+  }
+`
 
 const StyledMenuButton = styled.button`
   width: 100%;
   height: 100%;
   border: none;
-  background-color: transparent;
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color:rgba(255, 255, 255, 0.3);
   border-style: solid;
   border-color: white;
   border-radius: 2rem;
@@ -94,7 +97,7 @@ export default function Menu() {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle}>
-        Menu svg
+        <StyledMenuIcon />
       </StyledMenuButton>
 
       {open && (
