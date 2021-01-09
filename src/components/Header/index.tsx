@@ -49,7 +49,7 @@ const HeaderFrame = styled.div`
 
 const HeaderControls = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-self: flex-end;
   overflow:visible;
