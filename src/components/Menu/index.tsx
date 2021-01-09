@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { BookOpen, Info, MessageCircle, ShoppingCart } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -78,14 +78,11 @@ const MenuItem = styled(ExternalLink)`
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
-    border: 1px solid gold;
   }
   > svg {
     margin-right: 8px;
   }
 `
-
-const CODE_LINK = 'https://github.com/penguinparty-eth'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
@@ -104,38 +101,19 @@ export default function Menu() {
         <MenuFlyout>
           <MenuItem id="link" href="https://hiturunk.medium.com">
             <Info size={14} />
-            News
+            About
           </MenuItem>
           <MenuItem id="link" href="https://uniswap.org/docs/v2">
             <BookOpen size={14} />
-            Docs
-          </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
-            <Code size={14} />
-            Code
+            Learn more
           </MenuItem>
           <MenuItem id="link" href="https://discord.gg/pkmBgQr">
             <MessageCircle size={14} />
             Discord
           </MenuItem>
           <MenuItem id="link" href="https://dapp.dfohub.com">
-            👻Dfohub
-          </MenuItem>
-          <MenuItem id="link" href="https://gnosis-safe.io/app/#/safes/0x686B4535FF6573cef3FF37419A4fc6Ac775Ec7ea/balances">
-            💰Treasury
-          </MenuItem>
-          <MenuItem id="link" href="https://open.codecks.io/-penguinparty/">
-            🎴 Codecks
-          </MenuItem>
-          <MenuItem id="link" href="https://unigov.eth.link">
-            🏛 UniGov
-          </MenuItem>
-          <MenuItem id="link" href="https://snapshot.page/#/penguin-party">
-            🐧 Voting
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
-            <PieChart size={14} />
-            Analytics
+            <ShoppingCart size={14} />
+            Order status
           </MenuItem>
         </MenuFlyout>
       )}
