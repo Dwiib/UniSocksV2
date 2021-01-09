@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 import Logo from '../../assets/svg/logo-white.svg'
@@ -198,10 +197,6 @@ const StyledNavLink = styled(NavLink).attrs({
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center
   text-align:center;
-  border-style: solid;
-  border-color: white;
-  border-radius: 2rem;
-  border-width:1px;
   outline: none;
   cursor: pointer;
   text-decoration: none;
@@ -211,7 +206,6 @@ const StyledNavLink = styled(NavLink).attrs({
   margin: 0.75rem 0.75rem 0.75rem 0.75rem;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   font-weight: 750;
-  background-color:rgba(255, 255, 255, 0.3);
 
   &.${activeClassName} {
     border-radius: 12px;
@@ -222,9 +216,6 @@ const StyledNavLink = styled(NavLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.2, theme.text1)};
-    border-style: solid;
-    border-color:gold;
-    border-width:1px;
   }
 `
 
@@ -234,10 +225,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   text-align:center;
-  border-style: solid;
-  border-color: white;
-  border-radius: 2rem;
-  border-width: 1px;
   outline: none;
   cursor: pointer;
   text-decoration: none;
@@ -247,7 +234,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   margin: 0.75em 0.75rem 0.75rem 0.75rem;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   font-weight: 750;
-  background-color:rgba(255, 255, 255, 0.3);
 
   &.${activeClassName} {
     border-radius: 12px;
@@ -258,9 +244,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
-    border-style: solid;
-    border-color:gold;
-    border-width:1px;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -277,7 +260,6 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
-  const { t } = useTranslation()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
@@ -300,12 +282,15 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            🔄 {t('swap')} 🔄
-          </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.exchange/#/swap'}>
-            🦄Uniswap🦄 <span style={{ fontSize: '10px' }}></span>
+            Unisocks
           </StyledExternalLink>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+            Stats
+          </StyledNavLink>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+            Redeem
+          </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
