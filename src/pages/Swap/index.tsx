@@ -44,6 +44,7 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import Product from '../../components/Product'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -289,6 +290,7 @@ export default function Swap() {
           />
 
           <AutoColumn gap={'md'}>
+          <Product/>
             <CurrencyInputPanel
               label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
