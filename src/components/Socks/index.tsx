@@ -1,5 +1,5 @@
 import React from 'react'
-import Unisocks1raw from '../../assets/images/unisocks1.png'
+import Unisocks1img from '../../assets/images/unisocks1.png'
 import styled from 'styled-components'
 
 const ImageContainer = styled.div`
@@ -28,8 +28,8 @@ export default function Socks() {
   return (
     <div>
       <ImageContainer>
-        <Unisocks1raw/>
-        </ImageContainer>
+        <img src={Unisocks1img} />
+      </ImageContainer>
       <SocksPrice>PRICE HERE USD</SocksPrice>
       <SocksStats>
         <SocksStatsRedeem>123 Redeem</SocksStatsRedeem>
