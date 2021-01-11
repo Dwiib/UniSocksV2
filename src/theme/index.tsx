@@ -218,7 +218,7 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   background: rgb(255,219,247);
-  background: radial-gradient(circle, rgba(255,219,247,1) 0%, rgba(255,255,255,1) 100%);  background-position: 0;
+  background: radial-gradient(circle at left, rgba(255,219,247,1) 0%, rgba(255,255,255,1) 100%);  background-position: 0;
   background-repeat: no-repeat;
   background-attachment: fixed;
   height:100%;
