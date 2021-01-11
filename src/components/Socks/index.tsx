@@ -2,10 +2,13 @@ import React from 'react'
 import Unisocks1img from '../../assets/images/unisocks1.png'
 import styled from 'styled-components'
 
-const ImageContainer = styled.div`
-  width: 100%;
-  height: auto;
-`
+const SocksImage = {
+  width: "100%",
+};
+
+const SocksContainer = {
+  padding: "30px",
+};
 
 const SocksPrice = styled.div`
   color: #FF007A;
@@ -26,10 +29,8 @@ const SocksStatsAvailable = styled.div`
 
 export default function Socks() {
   return (
-    <div>
-      <ImageContainer>
-        <img src={Unisocks1img} />
-      </ImageContainer>
+    <div style={SocksContainer}>
+        <img style={SocksImage} src={Unisocks1img} />
       <SocksPrice>PRICE HERE USD</SocksPrice>
       <SocksStats>
         <SocksStatsRedeem>123 Redeem</SocksStatsRedeem>
