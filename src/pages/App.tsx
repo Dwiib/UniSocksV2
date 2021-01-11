@@ -33,7 +33,7 @@ const SwapWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  align-items: center;
+  align-items: flex-start;
 `
 
 const BodyWrapper = styled.div`
@@ -58,6 +58,21 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
+const SwapHeader = styled.div`
+  width: 100%;
+`
+const SwapTitle = styled.h1`
+  color: #FF007A;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 0;
+`
+const SwapSubTitle = styled.p`
+  color: #C3C5CB;
+  font-weight: 400;
+  margin-top: 0.5rem;
+`
+
 function TopLevelModals() {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
   const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
@@ -77,6 +92,10 @@ export default function App() {
         <BodyWrapper>
         <Product/>
         <SwapWrapper>
+          <SwapHeader>
+            <SwapTitle>Unisocks Edition 0</SwapTitle>
+            <SwapSubTitle>$SOCKS</SwapSubTitle>
+          </SwapHeader>
           <Popups />
           <Polling />
           <TopLevelModals />
