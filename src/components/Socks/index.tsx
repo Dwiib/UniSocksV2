@@ -37,7 +37,7 @@ export default function Socks() {
   return (
     <div style={SocksContainer}>
         <img style={SocksImage} src={Unisocks1img} />
-      <SocksPrice>PRICE HERE USD</SocksPrice>
+      <SocksPrice>$ PRICE HERE USD</SocksPrice>
       <SocksStats>
         <SocksStatsRedeem>🔥123 redeemed</SocksStatsRedeem>
         <SocksStatsAvailable>123 Available</SocksStatsAvailable>
