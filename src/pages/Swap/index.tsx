@@ -44,7 +44,6 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
-import Product from '../../components/Product'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -272,7 +271,6 @@ export default function Swap() {
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
-      <Product/>
       <AppBody>
         <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">

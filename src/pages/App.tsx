@@ -13,6 +13,8 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly} from './Swap/redirects'
+import Product from '../components/Product'
+
 
 const AppWrapper = styled.div`
   display: flex;
@@ -27,11 +29,17 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div`
+const SwapWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 100px;
+  align-items: center;
+`
+
+const BodyWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -67,6 +75,8 @@ export default function App() {
           <Header />
         </HeaderWrapper>
         <BodyWrapper>
+        <Product/>
+        <SwapWrapper>
           <Popups />
           <Polling />
           <TopLevelModals />
@@ -77,6 +87,7 @@ export default function App() {
             </Switch>
           </Web3ReactManager>
           <Marginer />
+          </SwapWrapper>
         </BodyWrapper>
       </AppWrapper>
     </Suspense>
