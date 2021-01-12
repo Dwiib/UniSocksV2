@@ -6,9 +6,15 @@ const SocksImage = {
   width: "100%",
 };
 
-const SocksContainer = {
-  padding: "30px",
-};
+const SocksContainer = styled.div`
+  padding: 30px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0;
+    padding-bottom: 30px;
+    text-align: center;
+  `};
+`
 
 const SocksPrice = styled.div`
   color: #FF007A;
@@ -19,6 +25,10 @@ const SocksPrice = styled.div`
 const SocksStats = styled.div`
   display: flex;
   flex-direction: row;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    justify-content: center;
+  `};
 `
 const SocksStatsRedeem = styled.div`
   color: #FF007A;
@@ -35,13 +45,13 @@ const SocksStatsAvailable = styled.div`
 
 export default function Socks() {
   return (
-    <div style={SocksContainer}>
+    <SocksContainer>
         <img style={SocksImage} src={Unisocks1img} />
       <SocksPrice>$ PRICE HERE USD</SocksPrice>
       <SocksStats>
         <SocksStatsRedeem>🔥123 redeemed</SocksStatsRedeem>
         <SocksStatsAvailable>123 Available</SocksStatsAvailable>
       </SocksStats>
-    </div>
+    </SocksContainer>
   )
 }
