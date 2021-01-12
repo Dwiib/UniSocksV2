@@ -33,12 +33,13 @@ const SwapWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  align-items: flex-start;
+  align-items: center;
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: no-wrap;
   width: 100%;
   align-items: center;
   flex: 1;
@@ -49,6 +50,7 @@ const BodyWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 16px;
     padding-top: 2rem;
+    flex-wrap: wrap;
   `};
 
   z-index: 1;
@@ -59,13 +61,13 @@ const Marginer = styled.div`
 `
 
 const SwapHeader = styled.div`
-  width: 100%;
 `
 const SwapTitle = styled.h1`
   color: #FF007A;
   font-weight: 600;
   text-align: left;
   margin-bottom: 0;
+  margin-top: 0;
 `
 const SwapSubTitle = styled.p`
   color: #C3C5CB;
