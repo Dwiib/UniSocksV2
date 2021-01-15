@@ -23,6 +23,7 @@ import Web3Status from '../Web3Status'
 import Modal from '../Modal'
 import SocksBalanceContent from './SocksBalanceContent'
 import SocksStatsContent from './SocksStatsContent'
+import SocksRedeemContent from './SocksRedeemContent'
 import usePrevious from '../../hooks/usePrevious'
 
 const HeaderFrame = styled.div`
@@ -270,6 +271,7 @@ export default function Header() {
 
   const [showSocksBalanceModal, setShowSocksBalanceModal] = useState(false)
   const [showSocksStatsModal, setShowSocksStatsModal] = useState(false)
+  const [showSocksRedeemModal, setShowSocksRedeemModal] = useState(false)
   const countUpSocksValue = aggregateSocksBalance?.toFixed(0) ?? '0'
   const countUpSocksValuePrevious = usePrevious(countUpSocksValue) ?? '0'
 
@@ -280,6 +282,9 @@ export default function Header() {
       </Modal>
       <Modal isOpen={showSocksStatsModal} onDismiss={() => setShowSocksStatsModal(false)}>
         <SocksStatsContent setShowSocksStatsModal={setShowSocksStatsModal} />
+      </Modal>
+      <Modal isOpen={showSocksRedeemModal} onDismiss={() => setShowSocksRedeemModal(false)}>
+        <SocksRedeemContent setShowSocksRedeemModal={setShowSocksRedeemModal} />
       </Modal>
       <HeaderRow>
         <Title href=".">
@@ -294,7 +299,7 @@ export default function Header() {
           <StyledNavLink onClick={() => setShowSocksStatsModal(true)} id={`swap-nav-link`} to={'/swap'}>
             Stats
           </StyledNavLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <StyledNavLink onClick={() => setShowSocksRedeemModal(true)} id={`swap-nav-link`} to={'/swap'}>
             Redeem
           </StyledNavLink>
         </HeaderLinks>
