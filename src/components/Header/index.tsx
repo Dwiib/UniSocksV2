@@ -22,6 +22,7 @@ import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import Modal from '../Modal'
 import SocksBalanceContent from './SocksBalanceContent'
+import SocksStatsContent from './SocksStatsContent'
 import usePrevious from '../../hooks/usePrevious'
 
 const HeaderFrame = styled.div`
@@ -268,6 +269,7 @@ export default function Header() {
   const aggregateSocksBalance: TokenAmount | undefined = useAggregateSocksBalance()
 
   const [showSocksBalanceModal, setShowSocksBalanceModal] = useState(false)
+  const [showSocksStatsModal, setShowSocksStatsModal] = useState(false)
   const countUpSocksValue = aggregateSocksBalance?.toFixed(0) ?? '0'
   const countUpSocksValuePrevious = usePrevious(countUpSocksValue) ?? '0'
 
@@ -275,6 +277,9 @@ export default function Header() {
     <HeaderFrame>
       <Modal isOpen={showSocksBalanceModal} onDismiss={() => setShowSocksBalanceModal(false)}>
         <SocksBalanceContent setShowSocksBalanceModal={setShowSocksBalanceModal} />
+      </Modal>
+      <Modal isOpen={showSocksStatsModal} onDismiss={() => setShowSocksStatsModal(false)}>
+        <SocksStatsContent setShowSocksStatsModal={setShowSocksStatsModal} />
       </Modal>
       <HeaderRow>
         <Title href=".">
@@ -286,7 +291,7 @@ export default function Header() {
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.exchange/#/swap'}>
             Unisocks
           </StyledExternalLink>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <StyledNavLink onClick={() => setShowSocksStatsModal(true)} id={`swap-nav-link`} to={'/swap'}>
             Stats
           </StyledNavLink>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
