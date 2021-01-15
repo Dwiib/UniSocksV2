@@ -1,13 +1,12 @@
-import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
-import { SOCKS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
-import { ExternalLink, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
+import { ButtonLight } from '../../components/Button'
+import Unisocks1img from '../../assets/images/unisocks1.png'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -28,13 +27,39 @@ const StyledClose = styled(X)`
     cursor: pointer;
   }
 `
+const InputField = styled.input`
+  width: 100%;
+  height: 36px;
+  padding: 15px;
+  margin: 6px 0;
+  font-size: 1rem;
+  color: #333333;
+  border: none;
+  border-radius: .4rem;
+  outline: none;
+`
+const ModalHeader = styled.div`
+  display: flex;
+  width: min-content;
+`
+
+const SwapTitle = styled.h1`
+  color: #FF007A;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 0;
+  margin-top: 0;
+`
+
+const ImageTop = styled.img`
+  width: 100%;
+`
+
 
 /**
  * Content for balance stats modal
  */
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
-  const { chainId } = useActiveWeb3React()
-  const socks = chainId ? SOCKS : undefined
 
   return (
     <ContentWrapper gap="lg">
@@ -50,24 +75,24 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
 
         <CardSection gap="sm">
           <AutoColumn gap="md">
+          <ModalHeader>
+            <ImageTop src={Unisocks1img} />
+            <SwapTitle>Unisocks Edition 0</SwapTitle>
+          </ModalHeader>
             <RowBetween>
             <form>
-              <label>Where should we send them?
-              <input placeholder="Name"></input>
+              <label><TYPE.white color="white">Where should we send them?</TYPE.white>
+              <InputField placeholder="Name and surname"></InputField>
+              <InputField placeholder="Address Line 1"></InputField>
+              <InputField placeholder="Address Line 2"></InputField>
+              <InputField placeholder="City"></InputField>
+              <InputField placeholder="State/Province/Region"></InputField>
+              <InputField placeholder="ZIP/Postcode"></InputField>
+              <InputField placeholder="Country"></InputField>
               </label>
             </form>
             </RowBetween>
-            <RowBetween>
-              <TYPE.white color="white">🔥 Redeem SOCKS</TYPE.white>
-              <TYPE.white color="white">NUM</TYPE.white>
-            </RowBetween>
-            <RowBetween>
-              <TYPE.white color="white">💦 SOCKS Pool</TYPE.white>
-              <TYPE.white color="white">NUM</TYPE.white>
-            </RowBetween>
-            {socks && socks.chainId === ChainId.MAINNET ? (
-              <ExternalLink href={`https://uniswap.info/token/${socks.address}`}><TYPE.white color="white">View 🧦 Analytics</TYPE.white></ExternalLink>
-            ) : null}
+            <ButtonLight>Confirm purchase</ButtonLight>
           </AutoColumn>
         </CardSection>
       </ModalUpper>
