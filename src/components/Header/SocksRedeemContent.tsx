@@ -84,11 +84,11 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
               <label><TYPE.white color="white">Where should we send them?</TYPE.white>
               <InputField placeholder="Name and surname"></InputField>
               <InputField placeholder="Address Line 1"></InputField>
-              <InputField placeholder="Address Line 2"></InputField>
               <InputField placeholder="City"></InputField>
               <InputField placeholder="State/Province/Region"></InputField>
               <InputField placeholder="ZIP/Postcode"></InputField>
               <InputField placeholder="Country"></InputField>
+              <InputField placeholder="Email address"></InputField>
               </label>
             </form>
             </RowBetween>
