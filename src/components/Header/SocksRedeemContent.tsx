@@ -7,6 +7,7 @@ import { RowBetween } from '../Row'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import { ButtonLight } from '../../components/Button'
 import Unisocks1img from '../../assets/images/unisocks1.png'
+import SocksFinalContent from './SocksFinalContent'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -61,8 +62,13 @@ const ImageTop = styled.img`
  * Content for balance stats modal
  */
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
+  const [showSocksFinalModal, setShowSocksFinalModal] = useState(false)
 
   return (
+    <Modal isOpen={showSocksFinalModal} onDismiss={() => setShowSocksFinalModal(false)}>
+      <SocksFinalContent setShowSocksFinalModal={setShowSocksFinalModal} />
+    </Modal>
+
     <ContentWrapper gap="lg">
       <ModalUpper>
         <CardBGImage />
@@ -97,7 +103,7 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
               </label>
             </form>
             </RowBetween>
-            <ButtonLight>Confirm purchase</ButtonLight>
+            <ButtonLight onClick={() => setShowSocksFinalModal(true)}>Confirm purchase</ButtonLight>
           </AutoColumn>
         </CardSection>
       </ModalUpper>
