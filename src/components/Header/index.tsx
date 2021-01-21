@@ -5,8 +5,8 @@ import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 
 import styled from 'styled-components'
-import Logo from '../../assets/svg/logo-white.svg'
-import LogoDark from '../../assets/svg/logo-dark.svg'
+import Logo from '../../assets/svg/logo-dark.svg'
+import LogoDark from '../../assets/svg/logo-white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances, useAggregateSocksBalance } from '../../state/wallet/hooks'
@@ -108,7 +108,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: #FDEAF1;
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;

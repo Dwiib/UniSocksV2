@@ -22,6 +22,7 @@ export interface Colors {
 
   modalBG: Color
   advancedBG: Color
+  bodyGradient: Color
 
   //blues
   primary1: Color

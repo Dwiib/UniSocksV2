@@ -41,26 +41,27 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#000000' : '#000000',
-    text2: darkMode ? '#000000' : '#000000',
-    text3: darkMode ? '#000000' : '#000000',
-    text4: darkMode ? '#000000' : '#000000',
-    text5: darkMode ? '#000000' : '#000000',
+    text1: darkMode ? '#FFFFFF' : '#000000',
+    text2: darkMode ? '#C3C5CB' : '#565A69',
+    text3: darkMode ? '#6C7284' : '#888D9B',
+    text4: darkMode ? '#565A69' : '#C3C5CB',
+    text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg1: darkMode ? '#FFFFFF' : '#FFFFFF',
-    bg2: darkMode ? '#F7F8FA' : '#F7F8FA',
-    bg3: darkMode ? '#EDEEF2' : '#EDEEF2',
-    bg4: darkMode ? '#CED0D9' : '#CED0D9',
-    bg5: darkMode ? '#888D9B' : '#888D9B',
+    bg1: darkMode ? '#212429' : '#FFFFFF',
+    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
+    bg3: darkMode ? '#40444F' : '#EDEEF2',
+    bg4: darkMode ? '#565A69' : '#CED0D9',
+    bg5: darkMode ? '#6C7284' : '#888D9B',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.5)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    bodyGradient: darkMode ? 'radial-gradient(circle at left, rgba(255,219,247,1) 0%, rgba(255,255,255,1) 100%);  background-position: 0;' : 'radial-gradient(circle at left, rgba(33, 114, 229, 0.1) 0%, rgba(33, 36, 41, 0) 100%);  background-position: 0;',
 
     //primary colors
     primary1: darkMode ? '#FF007A' : '#FF007A',
-    primary2: darkMode ? '#9999FF' : '#9999FF',
+    primary2: darkMode ? '#FF8CC3' : '#FF8CC3',
     primary3: darkMode ? '#FF99C9' : '#FF99C9',
     primary4: darkMode ? '#F6DDE8' : '#F6DDE8',
     primary5: darkMode ? '#FDEAF1' : '#FDEAF1',
@@ -217,19 +218,17 @@ html {
 
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
-  background: rgb(255,219,247);
-  background: radial-gradient(circle at left, rgba(255,219,247,1) 0%, rgba(255,255,255,1) 100%);  background-position: 0;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  height:100%;
-  width:100%;
-  background-size:cover;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg2};
 }
 
 body {
 
 }
 .originalBackground{
+  min-height: 100vh;
+  background-position: 0 -30vh;
+  background-repeat: no-repeat;
   background-image: ${({ theme }) =>
     `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
       1,

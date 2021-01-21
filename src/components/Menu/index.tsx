@@ -21,12 +21,9 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  border-style: solid;
-  border-color: white;
-  border-radius: 2rem;
-  border-width:1px;
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.bg3};
 
   :hover,
   :focus {
