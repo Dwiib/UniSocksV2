@@ -57,7 +57,7 @@ export function colors(darkMode: boolean): Colors {
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.5)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
-    bodyGradient: darkMode ? 'radial-gradient(circle at left, rgba(255,219,247,1) 0%, rgba(255,255,255,1) 100%);  background-position: 0;' : 'radial-gradient(circle at left, rgba(33, 114, 229, 0.1) 0%, rgba(33, 36, 41, 0) 100%);  background-position: 0;',
+    bodyGradient: darkMode ? 'radial-gradient(circle at left, rgba(33, 114, 229, 0.1) 0%, rgba(33, 36, 41, 0) 100%);  background-position: 0;' : 'radial-gradient(circle at left, rgba(255,219,247,1) 0%, rgba(255,255,255,1) 100%);  background-position: 0;',
 
     //primary colors
     primary1: darkMode ? '#FF007A' : '#FF007A',
@@ -219,16 +219,19 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
+  background: ${({ theme}) => theme.bodyGradient};
   background-color: ${({ theme }) => theme.bg2};
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height:100%;
+  width:100%;
+  background-size:cover;
 }
 
 body {
 
 }
 .originalBackground{
-  min-height: 100vh;
-  background-position: 0 -30vh;
-  background-repeat: no-repeat;
   background-image: ${({ theme }) =>
     `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
       1,
