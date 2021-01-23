@@ -13,6 +13,8 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly} from './Swap/redirects'
+import Product from '../components/Product'
+
 
 const AppWrapper = styled.div`
   display: flex;
@@ -27,11 +29,18 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div`
+const SwapWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 100px;
+  align-items: center;
+`
+
+const BodyWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: no-wrap;
+  width: 100%;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -40,7 +49,7 @@ const BodyWrapper = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 16px;
-    padding-top: 2rem;
+    flex-wrap: wrap;
   `};
 
   z-index: 1;
@@ -48,6 +57,21 @@ const BodyWrapper = styled.div`
 
 const Marginer = styled.div`
   margin-top: 5rem;
+`
+
+const SwapHeader = styled.div`
+`
+const SwapTitle = styled.h1`
+  color: #FF007A;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 0;
+  margin-top: 0;
+`
+const SwapSubTitle = styled.p`
+  color: #C3C5CB;
+  font-weight: 400;
+  margin-top: 0.5rem;
 `
 
 function TopLevelModals() {
@@ -67,6 +91,12 @@ export default function App() {
           <Header />
         </HeaderWrapper>
         <BodyWrapper>
+        <Product/>
+        <SwapWrapper>
+          <SwapHeader>
+            <SwapTitle>Unisocks Edition 0</SwapTitle>
+            <SwapSubTitle>$SOCKS</SwapSubTitle>
+          </SwapHeader>
           <Popups />
           <Polling />
           <TopLevelModals />
@@ -77,6 +107,7 @@ export default function App() {
             </Switch>
           </Web3ReactManager>
           <Marginer />
+          </SwapWrapper>
         </BodyWrapper>
       </AppWrapper>
     </Suspense>

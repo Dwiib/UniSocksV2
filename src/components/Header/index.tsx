@@ -3,11 +3,10 @@ import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+import Logo from '../../assets/svg/logo-dark.svg'
+import LogoDark from '../../assets/svg/logo-white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances, useAggregateSocksBalance } from '../../state/wallet/hooks'
@@ -23,6 +22,8 @@ import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import Modal from '../Modal'
 import SocksBalanceContent from './SocksBalanceContent'
+import SocksStatsContent from './SocksStatsContent'
+import SocksRedeemContent from './SocksRedeemContent'
 import usePrevious from '../../hooks/usePrevious'
 
 const HeaderFrame = styled.div`
@@ -34,7 +35,6 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -51,7 +51,7 @@ const HeaderFrame = styled.div`
 
 const HeaderControls = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-self: flex-end;
   overflow:visible;
@@ -113,6 +113,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   white-space: nowrap;
   width: 100%;
   cursor: pointer;
+  color: #FF007A;
 
   :focus {
     border: 1px solid blue;
@@ -199,10 +200,6 @@ const StyledNavLink = styled(NavLink).attrs({
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center
   text-align:center;
-  border-style: solid;
-  border-color: white;
-  border-radius: 2rem;
-  border-width:1px;
   outline: none;
   cursor: pointer;
   text-decoration: none;
@@ -212,7 +209,6 @@ const StyledNavLink = styled(NavLink).attrs({
   margin: 0.75rem 0.75rem 0.75rem 0.75rem;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   font-weight: 750;
-  background-color:rgba(255, 255, 255, 0.3);
 
   &.${activeClassName} {
     border-radius: 12px;
@@ -223,9 +219,6 @@ const StyledNavLink = styled(NavLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.2, theme.text1)};
-    border-style: solid;
-    border-color:gold;
-    border-width:1px;
   }
 `
 
@@ -235,10 +228,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   text-align:center;
-  border-style: solid;
-  border-color: white;
-  border-radius: 2rem;
-  border-width: 1px;
   outline: none;
   cursor: pointer;
   text-decoration: none;
@@ -248,7 +237,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   margin: 0.75em 0.75rem 0.75rem 0.75rem;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   font-weight: 750;
-  background-color:rgba(255, 255, 255, 0.3);
 
   &.${activeClassName} {
     border-radius: 12px;
@@ -259,9 +247,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
-    border-style: solid;
-    border-color:gold;
-    border-width:1px;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -278,7 +263,6 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
-  const { t } = useTranslation()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
@@ -286,6 +270,8 @@ export default function Header() {
   const aggregateSocksBalance: TokenAmount | undefined = useAggregateSocksBalance()
 
   const [showSocksBalanceModal, setShowSocksBalanceModal] = useState(false)
+  const [showSocksStatsModal, setShowSocksStatsModal] = useState(false)
+  const [showSocksRedeemModal, setShowSocksRedeemModal] = useState(false)
   const countUpSocksValue = aggregateSocksBalance?.toFixed(0) ?? '0'
   const countUpSocksValuePrevious = usePrevious(countUpSocksValue) ?? '0'
 
@@ -294,19 +280,28 @@ export default function Header() {
       <Modal isOpen={showSocksBalanceModal} onDismiss={() => setShowSocksBalanceModal(false)}>
         <SocksBalanceContent setShowSocksBalanceModal={setShowSocksBalanceModal} />
       </Modal>
+      <Modal isOpen={showSocksStatsModal} onDismiss={() => setShowSocksStatsModal(false)}>
+        <SocksStatsContent setShowSocksStatsModal={setShowSocksStatsModal} />
+      </Modal>
+      <Modal isOpen={showSocksRedeemModal} onDismiss={() => setShowSocksRedeemModal(false)}>
+        <SocksRedeemContent setShowSocksRedeemModal={setShowSocksRedeemModal} />
+      </Modal>
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <img width={'45px'} src={isDark ? LogoDark : Logo} alt="logo" />
+            <img width={'24px'} src={isDark ? LogoDark : Logo} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            🔄 {t('swap')} 🔄
-          </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.exchange/#/swap'}>
-            🦄Uniswap🦄 <span style={{ fontSize: '10px' }}></span>
+            Unisocks
           </StyledExternalLink>
+          <StyledNavLink onClick={() => setShowSocksStatsModal(true)} id={`swap-nav-link`} to={'/swap'}>
+            Stats
+          </StyledNavLink>
+          <StyledNavLink onClick={() => setShowSocksRedeemModal(true)} id={`swap-nav-link`} to={'/swap'}>
+            Redeem
+          </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
