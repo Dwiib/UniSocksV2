@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
@@ -72,7 +72,36 @@ const RedeemedTitle = styled.h1`
   text-align: center;
   color: #FF007A;
 `
-const formState = true
+const formShowing = false
+
+const nameSurname = 'nameSurname'
+const addressLine1 = 'addressLine1'
+const city = 'city'
+const stateProvinceRegion = 'stateProvinceRegion'
+const zipPostCode = 'zipPostCode'
+const country = 'country'
+const emailAddress = 'emailAddress'
+
+const nameMap = {
+  [nameSurname]: 'Name and Surname',
+  [addressLine1]: 'Address Line 1',
+  [city]: 'City',
+  [stateProvinceRegion]: 'State / Province / Region',
+  [zipPostCode]: 'Zip / Post Code',
+  [country]: 'Country',
+  [emailAddress]: 'Email Address'
+}
+
+
+const defaultState = {
+  [nameSurname]: '',
+  [addressLine1]: '',
+  [city]: '',
+  [stateProvinceRegion]: '',
+  [zipPostCode]: '',
+  [country]: '',
+  [emailAddress]: ''
+}
 
 
 /**
@@ -80,9 +109,16 @@ const formState = true
  */
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
 
+  const [formState, setFormState] = useState(defaultState)
+   
+  function handleChange(event: { target: { name: any; value: any } }) {
+    const { name, value } = event.target
+    setFormState(state => ({ ...state, [name]: value }))
+  }
+  let formData = {formName:`${formState[nameSurname]}`, formAddress:`${formState[addressLine1]}`, formCity:`${formState[city]}`, stateProvinceRegionFromForm:`${formState[stateProvinceRegion]}`, formZipPostCode:`${formState[zipPostCode]}`, formCountry:`${formState[country]}`, formEmailAddress:`${formState[emailAddress]}`}
   return (
     <ContentWrapper gap="lg">
-    <div hidden={formState}>
+    <div hidden={formShowing}>
       <ModalUpper>
         <CardBGImage />
         <CardNoise />
@@ -105,17 +141,24 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
               <RowBetween>
               <form>
                 <label><TYPE.white color="white">Where should we send them?</TYPE.white>
-                <InputField placeholder="Name and surname"></InputField>
-                <InputField placeholder="Address Line 1"></InputField>
-                <InputField placeholder="City"></InputField>
-                <InputField placeholder="State/Province/Region"></InputField>
-                <InputField placeholder="ZIP/Postcode"></InputField>
-                <InputField placeholder="Country"></InputField>
-                <InputField placeholder="Email address"></InputField>
+                <InputField name={nameSurname} value={formState[nameSurname]}
+                onChange={handleChange} placeholder={nameMap[nameSurname]}></InputField>
+                <InputField name={addressLine1} value={formState[addressLine1]}
+                onChange={handleChange} placeholder={nameMap[addressLine1]}></InputField>
+                <InputField name={city} value={formState[city]}
+                onChange={handleChange} placeholder={nameMap[city]}></InputField>
+                <InputField name={stateProvinceRegion} value={formState[stateProvinceRegion]}
+                onChange={handleChange} placeholder={nameMap[stateProvinceRegion]}></InputField>
+                <InputField name={zipPostCode} value={formState[zipPostCode]}
+                onChange={handleChange} placeholder={nameMap[zipPostCode]}></InputField>
+                <InputField name={country} value={formState[country]}
+                onChange={handleChange} placeholder={nameMap[country]}></InputField>
+                <InputField name={emailAddress} value={formState[emailAddress]}
+                onChange={handleChange} placeholder={nameMap[emailAddress]}></InputField>
                 </label>
               </form>
               </RowBetween>
-              <ButtonLight onClick={()=>{}}>Confirm purchase</ButtonLight>
+              <ButtonLight onClick={()=>{console.log(formData)}}>Confirm purchase</ButtonLight>
             </AutoColumn>
           </CardSection>
           </ModalUpper>
