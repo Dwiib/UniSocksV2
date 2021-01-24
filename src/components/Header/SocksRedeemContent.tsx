@@ -8,6 +8,7 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import { ButtonLight } from '../../components/Button'
 import Unisocks1img from '../../assets/images/unisocks1.png'
 import Checkmark from '../../assets/images/checkmark.png'
+import { useActiveWeb3React } from '../../hooks'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -92,7 +93,6 @@ const nameMap = {
   [emailAddress]: 'Email Address'
 }
 
-
 const defaultState = {
   [nameSurname]: '',
   [addressLine1]: '',
@@ -108,14 +108,14 @@ const defaultState = {
  * Content for balance stats modal
  */
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
-
+  const { library } = useActiveWeb3React()
   const [formState, setFormState] = useState(defaultState)
    
   function handleChange(event: { target: { name: any; value: any } }) {
     const { name, value } = event.target
     setFormState(state => ({ ...state, [name]: value }))
   }
-  let formData = {formName:`${formState[nameSurname]}`, formAddress:`${formState[addressLine1]}`, formCity:`${formState[city]}`, stateProvinceRegionFromForm:`${formState[stateProvinceRegion]}`, formZipPostCode:`${formState[zipPostCode]}`, formCountry:`${formState[country]}`, formEmailAddress:`${formState[emailAddress]}`}
+
   return (
     <ContentWrapper gap="lg">
     <div hidden={formShowing}>
@@ -158,7 +158,35 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
                 </label>
               </form>
               </RowBetween>
-              <ButtonLight onClick={()=>{console.log(formData)}}>Confirm purchase</ButtonLight>
+              <ButtonLight onClick={ async () => {
+                const signer = library.getSigner()
+                //const timestampToSign = Math.round(Date.now() / 1000)
+                const header = `PLEASE VERIFY YOUR ADDRESS.\nYour data will never be shared publicly.`
+                const formDataMessage = `
+                  ${nameMap[nameSurname]}: ${formState[nameSurname]}
+                  ${nameMap[addressLine1]}: ${formState[addressLine1]}
+                  ${nameMap[city]}: ${formState[city]}
+                  ${nameMap[stateProvinceRegion]}: ${formState[stateProvinceRegion]}
+                  ${nameMap[zipPostCode]}: ${formState[zipPostCode]}
+                  ${nameMap[country]}: ${formState[country]}
+                  ${nameMap[emailAddress]}: ${formState[emailAddress]}
+                `
+                const autoMessage = '' // TODO
+
+                var signature = await signer
+                  .signMessage(`${header}\n\n${formDataMessage}\n${autoMessage}`)
+
+                // Will probably need to pass in actual URL of endpoint instead of '/'
+                await fetch('/', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                  body: '' // TODO encode
+                })
+
+                console.log(signature)
+              }}>
+                Confirm purchase
+              </ButtonLight>
             </AutoColumn>
           </CardSection>
           </ModalUpper>
