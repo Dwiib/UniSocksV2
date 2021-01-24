@@ -74,6 +74,7 @@ const RedeemedTitle = styled.h1`
 `
 const formShowing = false
 
+const qty = 'qty'
 const nameSurname = 'nameSurname'
 const addressLine1 = 'addressLine1'
 const city = 'city'
@@ -83,6 +84,7 @@ const country = 'country'
 const emailAddress = 'emailAddress'
 
 const nameMap = {
+  [qty]: 'QTY',
   [nameSurname]: 'Name and Surname',
   [addressLine1]: 'Address Line 1',
   [city]: 'City',
@@ -94,6 +96,7 @@ const nameMap = {
 
 
 const defaultState = {
+  [qty]: Number,
   [nameSurname]: '',
   [addressLine1]: '',
   [city]: '',
@@ -115,7 +118,7 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
     const { name, value } = event.target
     setFormState(state => ({ ...state, [name]: value }))
   }
-  let formData = {formName:`${formState[nameSurname]}`, formAddress:`${formState[addressLine1]}`, formCity:`${formState[city]}`, stateProvinceRegionFromForm:`${formState[stateProvinceRegion]}`, formZipPostCode:`${formState[zipPostCode]}`, formCountry:`${formState[country]}`, formEmailAddress:`${formState[emailAddress]}`}
+  let formData = {formQty:`${formState[qty]}`, formName:`${formState[nameSurname]}`, formAddress:`${formState[addressLine1]}`, formCity:`${formState[city]}`, stateProvinceRegionFromForm:`${formState[stateProvinceRegion]}`, formZipPostCode:`${formState[zipPostCode]}`, formCountry:`${formState[country]}`, formEmailAddress:`${formState[emailAddress]}`}
   return (
     <ContentWrapper gap="lg">
     <div hidden={formShowing}>
@@ -136,7 +139,8 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
             </ModalHeader>
             <RowBetween>
             <TYPE.white color="white">🧦 Socks QTY</TYPE.white>
-            <TYPE.white color="white">NUM</TYPE.white>
+            <input type="number" name={qty} value={formState[qty].toString()}
+                onChange={handleChange} placeholder={nameMap[qty]}></input>
             </RowBetween>
               <RowBetween>
               <form>
