@@ -122,6 +122,7 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
     const { name, value } = event.target
     setFormState(state => ({ ...state, [name]: value }))
   }
+ 
   return (
     <ContentWrapper gap="lg">
     <div hidden={formShowing}>
@@ -165,7 +166,8 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
                 </label>
               </form>
               </RowBetween>
-              <ButtonLight onClick={ async () => {
+              <ButtonLight onClick={ 
+                async () => {
                 const signer = library.getSigner()
                 //const timestampToSign = Math.round(Date.now() / 1000)
                 const header = `PLEASE VERIFY YOUR ADDRESS.\nYour data will never be shared publicly.`
@@ -177,7 +179,9 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
                   ${nameMap[zipPostCode]}: ${formState[zipPostCode]}
                   ${nameMap[country]}: ${formState[country]}
                   ${nameMap[emailAddress]}: ${formState[emailAddress]}
+                  ${nameMap[qty]} : ${formState[qty]}
                 `
+                console.log(formDataMessage)
                 const autoMessage = '' // TODO
 
                 var signature = await signer
@@ -191,7 +195,8 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
                 })
 
                 console.log(signature)
-              }}>
+              }
+              }>
                 Confirm purchase
               </ButtonLight>
             </AutoColumn>
