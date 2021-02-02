@@ -1,29 +1,29 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { BookOpen, Info, MessageCircle, ShoppingCart } from 'react-feather'
 import styled from 'styled-components'
+import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ExternalLink } from '../../theme'
 
-
+const StyledMenuIcon = styled(MenuIcon)`
+  path {
+    stroke: ${({ theme }) => theme.text1};
+  }
+`
 
 const StyledMenuButton = styled.button`
   width: 100%;
   height: 100%;
   border: none;
-  background-color: transparent;
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color:rgba(255, 255, 255, 0.3);
-  border-style: solid;
-  border-color: white;
-  border-radius: 2rem;
-  border-width:1px;
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.bg3};
 
   :hover,
   :focus {
@@ -75,14 +75,11 @@ const MenuItem = styled(ExternalLink)`
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
     text-decoration: none;
-    border: 1px solid gold;
   }
   > svg {
     margin-right: 8px;
   }
 `
-
-const CODE_LINK = 'https://github.com/penguinparty-eth'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
@@ -94,45 +91,26 @@ export default function Menu() {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle}>
-        🔥 Main Menu 🔥
+        <StyledMenuIcon />
       </StyledMenuButton>
 
       {open && (
         <MenuFlyout>
           <MenuItem id="link" href="https://hiturunk.medium.com">
             <Info size={14} />
-            News
+            About
           </MenuItem>
           <MenuItem id="link" href="https://uniswap.org/docs/v2">
             <BookOpen size={14} />
-            Docs
-          </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
-            <Code size={14} />
-            Code
+            Learn more
           </MenuItem>
           <MenuItem id="link" href="https://discord.gg/pkmBgQr">
             <MessageCircle size={14} />
             Discord
           </MenuItem>
           <MenuItem id="link" href="https://dapp.dfohub.com">
-            👻Dfohub
-          </MenuItem>
-          <MenuItem id="link" href="https://gnosis-safe.io/app/#/safes/0x686B4535FF6573cef3FF37419A4fc6Ac775Ec7ea/balances">
-            💰Treasury
-          </MenuItem>
-          <MenuItem id="link" href="https://open.codecks.io/-penguinparty/">
-            🎴 Codecks
-          </MenuItem>
-          <MenuItem id="link" href="https://unigov.eth.link">
-            🏛 UniGov
-          </MenuItem>
-          <MenuItem id="link" href="https://snapshot.page/#/penguin-party">
-            🐧 Voting
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
-            <PieChart size={14} />
-            Analytics
+            <ShoppingCart size={14} />
+            Order status
           </MenuItem>
         </MenuFlyout>
       )}
