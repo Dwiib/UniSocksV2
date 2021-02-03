@@ -1,6 +1,11 @@
 import React from 'react'
+import { TokenAmount } from '@uniswap/sdk'
+import { useActiveWeb3React } from '../../hooks'
 import Unisocks1img from '../../assets/images/unisocks1.png'
+import { SOCKS } from '../../constants'
 import styled from 'styled-components'
+import useUSDCPrice from '../../utils/useUSDCPrice'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 
 const SocksContainer = styled.div`
@@ -44,13 +49,19 @@ const SocksStatsAvailable = styled.div`
 `
 
 export default function Socks() {
+  const { chainId } = useActiveWeb3React()
+  const socks = chainId ? SOCKS : undefined
+  const socksPrice = useUSDCPrice(socks)
+  const totalSupply: TokenAmount | undefined = useTotalSupply(socks)
+
+
   return (
     <SocksContainer>
         <ImageTop src={Unisocks1img} />
-      <SocksPrice>$ PRICE HERE USD</SocksPrice>
+      <SocksPrice>Current SOCKS Price: ${socksPrice?.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? '-'}</SocksPrice>
       <SocksStats>
-        <SocksStatsRedeem>🔥123 redeemed</SocksStatsRedeem>
-        <SocksStatsAvailable>123 Available</SocksStatsAvailable>
+        <SocksStatsRedeem>🔥</SocksStatsRedeem>
+        <SocksStatsAvailable>Currently there are {totalSupply?.toFixed(0, { groupSeparator: ',' })} SOCKS available</SocksStatsAvailable>
       </SocksStats>
     </SocksContainer>
   )
