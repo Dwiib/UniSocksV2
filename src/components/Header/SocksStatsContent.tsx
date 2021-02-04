@@ -6,7 +6,8 @@ import tokenLogo from '../../assets/images/socks-logo.png'
 import { SOCKS } from '../../constants'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
-import { ExternalLink, TYPE, UniTokenAnimated } from '../../theme'
+import { ExternalLink, StyledInternalLink, TYPE, UniTokenAnimated } from '../../theme'
+import useUSDCPrice from '../../utils/useUSDCPrice'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
@@ -39,14 +40,16 @@ export default function SocksBalanceContent({ setShowSocksStatsModal }: { setSho
   const socks = chainId ? SOCKS : undefined
   const totalSupply: TokenAmount | undefined = useTotalSupply(socks)
 
+  const socksPrice = useUSDCPrice(socks)
+
   return (
     <ContentWrapper gap="lg">
       <ModalUpper>
         <CardBGImage />
         <CardNoise />
-        <CardSection gap="md">
+        <CardSection gap="md" style={{justifySelf: "center"}}>
           <RowBetween>
-            <TYPE.white color="white">SOCKS Stats</TYPE.white>
+            <TYPE.white color="white">Your 🧦 Stats</TYPE.white>
             <StyledClose stroke="white" onClick={() => setShowSocksStatsModal(false)} />
           </RowBetween>
         </CardSection>
@@ -67,19 +70,31 @@ export default function SocksBalanceContent({ setShowSocksStatsModal }: { setSho
         <CardSection gap="sm">
           <AutoColumn gap="md">
             <RowBetween>
-              <TYPE.white color="white">🧦 Initial SOCKS</TYPE.white>
-              <TYPE.white color="white">NUM</TYPE.white>
+              <TYPE.white color="white">🧦 Price:
+</TYPE.white>
+<TYPE.white color="white">${socksPrice?.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? '-'}</TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">🔥 Redeem SOCKS</TYPE.white>
-              <TYPE.white color="white">NUM</TYPE.white>
+            <TYPE.white color="white">🧦 Available</TYPE.white>
+              <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">💦 SOCKS Pool</TYPE.white>
-              <TYPE.white color="white">NUM</TYPE.white>
+              <TYPE.white color="white">🧦 Redeemed</TYPE.white>
+              <TYPE.white color="white">🔥{500 - Number(totalSupply?.toFixed(0, { groupSeparator: ',' }))}</TYPE.white>
+            </RowBetween>
+            <RowBetween>
+            <StyledInternalLink onClick={() => setShowSocksStatsModal(false)} to="/swap?exactField=output&outputCurrency=0x23b608675a2b2fb1890d3abbd85c5775c51691d5">
+              <TYPE.white color="white">BUY</TYPE.white>
+            </StyledInternalLink>
+            <ExternalLink href="https://unisocks.exchange">
+              <TYPE.white color="white">REDEEM</TYPE.white>
+            </ExternalLink>
+            <StyledInternalLink onClick={() => setShowSocksStatsModal(false)} to="/swap?exactField=input&inputCurrency=0x23b608675a2b2fb1890d3abbd85c5775c51691d5">
+              <TYPE.white color="white">SELL</TYPE.white>
+            </StyledInternalLink>
             </RowBetween>
             {socks && socks.chainId === ChainId.MAINNET ? (
-              <ExternalLink href={`https://uniswap.info/token/${socks.address}`}><TYPE.white color="white">View 🧦 Analytics</TYPE.white></ExternalLink>
+              <ExternalLink style={{justifySelf: "center", marginTop: "10px"}} href={`https://uniswap.info/token/${socks.address}`}><TYPE.white color="white">View 🧦 Analytics</TYPE.white></ExternalLink>
             ) : null}
           </AutoColumn>
         </CardSection>
