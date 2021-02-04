@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
@@ -8,6 +8,7 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import { ButtonLight } from '../../components/Button'
 import Unisocks1img from '../../assets/images/unisocks1.png'
 import Checkmark from '../../assets/images/checkmark.png'
+import { useActiveWeb3React } from '../../hooks'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -72,17 +73,59 @@ const RedeemedTitle = styled.h1`
   text-align: center;
   color: #FF007A;
 `
-const formState = true
+const formShowing = false
+
+const qty = 'qty'
+const nameSurname = 'nameSurname'
+const addressLine1 = 'addressLine1'
+const city = 'city'
+const stateProvinceRegion = 'stateProvinceRegion'
+const zipPostCode = 'zipPostCode'
+const country = 'country'
+const emailAddress = 'emailAddress'
+const ethAddress = 'ethAddress'
+const timeStamp = 'timeStamp'
+
+const nameMap = {
+  [qty]: 'QTY',
+  [nameSurname]: 'Name and Surname',
+  [addressLine1]: 'Address Line 1',
+  [city]: 'City',
+  [stateProvinceRegion]: 'State / Province / Region',
+  [zipPostCode]: 'Zip / Post Code',
+  [country]: 'Country',
+  [emailAddress]: 'Email Address',
+  [ethAddress]: 'Ethereum Address',
+  [timeStamp]: 'Time'
+}
+
+const defaultState = {
+  [qty]: Number,
+  [nameSurname]: '',
+  [addressLine1]: '',
+  [city]: '',
+  [stateProvinceRegion]: '',
+  [zipPostCode]: '',
+  [country]: '',
+  [emailAddress]: ''
+}
 
 
 /**
  * Content for balance stats modal
  */
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
-
+  const { library } = useActiveWeb3React()
+  const [formState, setFormState] = useState(defaultState)
+   
+  function handleChange(event: { target: { name: any; value: any } }) {
+    const { name, value } = event.target
+    setFormState(state => ({ ...state, [name]: value }))
+  }
+ 
   return (
     <ContentWrapper gap="lg">
-    <div hidden={formState}>
+    <div hidden={formShowing}>
       <ModalUpper>
         <CardBGImage />
         <CardNoise />
@@ -100,22 +143,62 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
             </ModalHeader>
             <RowBetween>
             <TYPE.white color="white">🧦 Socks QTY</TYPE.white>
-            <TYPE.white color="white">NUM</TYPE.white>
+            <input type="number" name={qty} value={formState[qty].toString()}
+                onChange={handleChange} placeholder={nameMap[qty]}></input>
             </RowBetween>
               <RowBetween>
               <form>
                 <label><TYPE.white color="white">Where should we send them?</TYPE.white>
-                <InputField placeholder="Name and surname"></InputField>
-                <InputField placeholder="Address Line 1"></InputField>
-                <InputField placeholder="City"></InputField>
-                <InputField placeholder="State/Province/Region"></InputField>
-                <InputField placeholder="ZIP/Postcode"></InputField>
-                <InputField placeholder="Country"></InputField>
-                <InputField placeholder="Email address"></InputField>
+                <InputField name={nameSurname} value={formState[nameSurname]}
+                onChange={handleChange} placeholder={nameMap[nameSurname]}></InputField>
+                <InputField name={addressLine1} value={formState[addressLine1]}
+                onChange={handleChange} placeholder={nameMap[addressLine1]}></InputField>
+                <InputField name={city} value={formState[city]}
+                onChange={handleChange} placeholder={nameMap[city]}></InputField>
+                <InputField name={stateProvinceRegion} value={formState[stateProvinceRegion]}
+                onChange={handleChange} placeholder={nameMap[stateProvinceRegion]}></InputField>
+                <InputField name={zipPostCode} value={formState[zipPostCode]}
+                onChange={handleChange} placeholder={nameMap[zipPostCode]}></InputField>
+                <InputField name={country} value={formState[country]}
+                onChange={handleChange} placeholder={nameMap[country]}></InputField>
+                <InputField name={emailAddress} value={formState[emailAddress]}
+                onChange={handleChange} placeholder={nameMap[emailAddress]}></InputField>
                 </label>
               </form>
               </RowBetween>
-              <ButtonLight onClick={()=>{}}>Confirm purchase</ButtonLight>
+              <ButtonLight onClick={ 
+                async () => {
+                const signer = library.getSigner()
+                //const timestampToSign = Math.round(Date.now() / 1000)
+                const header = `PLEASE VERIFY YOUR ADDRESS.\nYour data will never be shared publicly.`
+                const formDataMessage = `
+                  ${nameMap[nameSurname]}: ${formState[nameSurname]}
+                  ${nameMap[addressLine1]}: ${formState[addressLine1]}
+                  ${nameMap[city]}: ${formState[city]}
+                  ${nameMap[stateProvinceRegion]}: ${formState[stateProvinceRegion]}
+                  ${nameMap[zipPostCode]}: ${formState[zipPostCode]}
+                  ${nameMap[country]}: ${formState[country]}
+                  ${nameMap[emailAddress]}: ${formState[emailAddress]}
+                  ${nameMap[qty]} : ${formState[qty]}
+                `
+                console.log(formDataMessage)
+                const autoMessage = '' // TODO
+
+                var signature = await signer
+                  .signMessage(`${header}\n\n${formDataMessage}\n${autoMessage}`)
+
+                // Will probably need to pass in actual URL of endpoint instead of '/'
+                await fetch('/', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                  body: '' // TODO encode
+                })
+
+                console.log(signature)
+              }
+              }>
+                Confirm purchase
+              </ButtonLight>
             </AutoColumn>
           </CardSection>
           </ModalUpper>

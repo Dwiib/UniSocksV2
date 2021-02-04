@@ -60,7 +60,7 @@ export default function Socks() {
         <ImageTop src={Unisocks1img} />
       <SocksPrice>Current SOCKS Price: ${socksPrice?.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') ?? '-'}</SocksPrice>
       <SocksStats>
-        <SocksStatsRedeem>🔥</SocksStatsRedeem>
+        <SocksStatsRedeem>🔥 {500 - Number(totalSupply?.toFixed(0, { groupSeparator: ',' }))} SOCKS Redeemed</SocksStatsRedeem>
         <SocksStatsAvailable>Currently there are {totalSupply?.toFixed(0, { groupSeparator: ',' })} SOCKS available</SocksStatsAvailable>
       </SocksStats>
     </SocksContainer>
