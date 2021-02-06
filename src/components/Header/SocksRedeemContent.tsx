@@ -10,6 +10,8 @@ import Unisocks1img from '../../assets/images/unisocks1.png'
 import Checkmark from '../../assets/images/checkmark.png'
 import { useActiveWeb3React } from '../../hooks'
 
+import { ethers } from 'ethers'
+
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
 `
@@ -85,6 +87,7 @@ const country = 'country'
 const emailAddress = 'emailAddress'
 const ethAddress = 'ethAddress'
 const timeStamp = 'timeStamp'
+const numberBurned = 'number-burned'
 
 const nameMap = {
   [qty]: 'QTY',
@@ -96,11 +99,12 @@ const nameMap = {
   [country]: 'Country',
   [emailAddress]: 'Email Address',
   [ethAddress]: 'Ethereum Address',
-  [timeStamp]: 'Time'
+  [timeStamp]: 'Time',
+  [numberBurned]: 'SOCKS Redeemed'
 }
 
 const defaultState = {
-  [qty]: Number,
+  [qty]: 0,
   [nameSurname]: '',
   [addressLine1]: '',
   [city]: '',
@@ -110,12 +114,17 @@ const defaultState = {
   [emailAddress]: ''
 }
 
+function encode(data: any) {
+  return Object.keys(data)
+    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+    .join('&')
+}
 
 /**
  * Content for balance stats modal
  */
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
-  const { library } = useActiveWeb3React()
+  const { library, account } = useActiveWeb3React()
   const [formState, setFormState] = useState(defaultState)
    
   function handleChange(event: { target: { name: any; value: any } }) {
@@ -143,8 +152,9 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
             </ModalHeader>
             <RowBetween>
             <TYPE.white color="white">🧦 Socks QTY</TYPE.white>
-            <input type="number" name={qty} value={formState[qty].toString()}
-                onChange={handleChange} placeholder={nameMap[qty]}></input>
+            <input type="number" name={qty} value={formState[qty]}
+                onChange={handleChange} placeholder={nameMap[qty]}>
+            </input>
             </RowBetween>
               <RowBetween>
               <form>
@@ -168,33 +178,56 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
               </RowBetween>
               <ButtonLight onClick={ 
                 async () => {
-                const signer = library.getSigner()
-                //const timestampToSign = Math.round(Date.now() / 1000)
-                const header = `PLEASE VERIFY YOUR ADDRESS.\nYour data will never be shared publicly.`
-                const formDataMessage = `
-                  ${nameMap[nameSurname]}: ${formState[nameSurname]}
-                  ${nameMap[addressLine1]}: ${formState[addressLine1]}
-                  ${nameMap[city]}: ${formState[city]}
-                  ${nameMap[stateProvinceRegion]}: ${formState[stateProvinceRegion]}
-                  ${nameMap[zipPostCode]}: ${formState[zipPostCode]}
-                  ${nameMap[country]}: ${formState[country]}
-                  ${nameMap[emailAddress]}: ${formState[emailAddress]}
-                  ${nameMap[qty]} : ${formState[qty]}
-                `
-                console.log(formDataMessage)
-                const autoMessage = '' // TODO
+                  const signer = library.getSigner()
+                  const timestampToSign = Math.round(Date.now() / 1000)
+                  const header = `PLEASE VERIFY YOUR ADDRESS.\nYour data will never be shared publicly.`
+                  const formDataMessage = `
+                    ${nameMap[nameSurname]}: ${formState[nameSurname]}
+                    ${nameMap[addressLine1]}: ${formState[addressLine1]}
+                    ${nameMap[city]}: ${formState[city]}
+                    ${nameMap[stateProvinceRegion]}: ${formState[stateProvinceRegion]}
+                    ${nameMap[zipPostCode]}: ${formState[zipPostCode]}
+                    ${nameMap[country]}: ${formState[country]}
+                    ${nameMap[emailAddress]}: ${formState[emailAddress]}
+                    ${nameMap[qty]} : ${formState[qty]}
+                  `
 
-                var signature = await signer
-                  .signMessage(`${header}\n\n${formDataMessage}\n${autoMessage}`)
+                  //const amountToBurn = formState[qty].toString()
 
-                // Will probably need to pass in actual URL of endpoint instead of '/'
-                await fetch('/', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                  body: '' // TODO encode
+                  const estimatedGasPrice = await library.getGasPrice()
+                    .then(gasPrice => gasPrice.mul(ethers.BigNumber.from(150)).div(ethers.BigNumber.from(100)))
+
+                  // const estimatedGasLimit = await tokenContractSOCKS.estimate.burn(parsedAmount)
+
+
+                  console.log(`gp: ${estimatedGasPrice}`)
+
+                  const actualNumberBurned = formState[qty]
+
+                  
+
+                
+                  const autoMessage = `${nameMap[ethAddress]}: ${account}\n${nameMap[timeStamp]}: ${timestampToSign}\n${nameMap[numberBurned]}: ${actualNumberBurned}`
+
+                  var signature = await signer
+                    .signMessage(`${header}\n\n${formDataMessage}\n${autoMessage}`)
+
+                  // Will probably need to pass in actual URL of endpoint instead of '/'
+                  await fetch('/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: encode({
+                      'form-name': 'redeem',
+                      ...{
+                        ...formState,
+                        'address': account,
+                        'timestamp': timestampToSign,
+                        'numberBurned': actualNumberBurned,
+                        'signature': signature,
+                        //...(recaptchaEnabled ? { 'g-recaptcha-response': recaptcha } : {})
+                    }
+                  })
                 })
-
-                console.log(signature)
               }
               }>
                 Confirm purchase
