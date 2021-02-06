@@ -9,8 +9,10 @@ import { ButtonLight } from '../../components/Button'
 import Unisocks1img from '../../assets/images/unisocks1.png'
 import Checkmark from '../../assets/images/checkmark.png'
 import { useActiveWeb3React } from '../../hooks'
+import { useSocksController } from '../../hooks/useContract'
+import { BigNumber, ethers } from 'ethers'
 
-import { ethers } from 'ethers'
+const GAS_MARGIN = ethers.BigNumber.from(1000)
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -120,12 +122,18 @@ function encode(data: any) {
     .join('&')
 }
 
+export function calculateGasMargin(value: BigNumber, margin: BigNumber) {
+  const offset = value.mul(margin).div(ethers.BigNumber.from(10000))
+  return value.add(offset)
+}
+
 /**
  * Content for balance stats modal
  */
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
   const { library, account } = useActiveWeb3React()
   const [formState, setFormState] = useState(defaultState)
+  const socksController = useSocksController()
    
   function handleChange(event: { target: { name: any; value: any } }) {
     const { name, value } = event.target
@@ -191,23 +199,23 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
                     ${nameMap[emailAddress]}: ${formState[emailAddress]}
                     ${nameMap[qty]} : ${formState[qty]}
                   `
+                  const amountToBurn = formState[qty].toString()
 
-                  //const amountToBurn = formState[qty].toString()
+                  // The following should be put in a separate method
+                  const gasPrice = await library.getGasPrice()
+                  const estimatedGasPrice = gasPrice
+                    .mul(ethers.BigNumber.from(150))
+                    .div(ethers.BigNumber.from(100))
+                  const parsedAmount = ethers.utils.parseUnits(amountToBurn, 18)
+                  const estimatedGasLimit = await socksController.estimateGas.burn(parsedAmount)
+                  const response = await socksController.functions.burn(parsedAmount, {
+                    gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
+                    gasPrice: estimatedGasPrice
+                  })
 
-                  const estimatedGasPrice = await library.getGasPrice()
-                    .then(gasPrice => gasPrice.mul(ethers.BigNumber.from(150)).div(ethers.BigNumber.from(100)))
+                  console.log(`hash: ${response.hash}`)
 
-                  // const estimatedGasLimit = await tokenContractSOCKS.estimate.burn(parsedAmount)
-
-
-                  console.log(`gp: ${estimatedGasPrice}`)
-
-                  const actualNumberBurned = formState[qty]
-
-                  
-
-                
-                  const autoMessage = `${nameMap[ethAddress]}: ${account}\n${nameMap[timeStamp]}: ${timestampToSign}\n${nameMap[numberBurned]}: ${actualNumberBurned}`
+                  const autoMessage = `${nameMap[ethAddress]}: ${account}\n${nameMap[timeStamp]}: ${timestampToSign}\n${nameMap[numberBurned]}: ${amountToBurn}` // Todo: amount to burn needs to be replaced with actual burnt
 
                   var signature = await signer
                     .signMessage(`${header}\n\n${formDataMessage}\n${autoMessage}`)
@@ -222,7 +230,7 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
                         ...formState,
                         'address': account,
                         'timestamp': timestampToSign,
-                        'numberBurned': actualNumberBurned,
+                        'numberBurned': amountToBurn, // Todo: need actual amount burned
                         'signature': signature,
                         //...(recaptchaEnabled ? { 'g-recaptcha-response': recaptcha } : {})
                     }
