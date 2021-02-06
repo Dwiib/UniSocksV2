@@ -144,8 +144,22 @@ export function useStakingContract(stakingAddress?: string, withSignerIfPossible
 
 export function useSocksController(): Contract | null {
   const { chainId } = useActiveWeb3React()
+
+  let address = undefined
+
+  switch (chainId) {
+    case ChainId.MAINNET: {
+      address = '0x65770b5283117639760beA3F867b69b3697a91dd'
+      break
+    }
+    case ChainId.GÖRLI: {
+      address = '0xcf68c182e797ebf08b9d3d8eb3c09fe3693c40fd'
+      break
+    }
+  }
+
   return useContract(
-    chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
+    address,
     UNISOCKS_ABI,
     false
   )

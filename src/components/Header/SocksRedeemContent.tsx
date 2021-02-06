@@ -12,8 +12,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useSocksController } from '../../hooks/useContract'
 import { BigNumber, ethers } from 'ethers'
 
-const GAS_MARGIN = ethers.BigNumber.from(1000)
-
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
 `
@@ -133,7 +131,8 @@ export function calculateGasMargin(value: BigNumber, margin: BigNumber) {
 export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setShowSocksRedeemModal: any }) {
   const { library, account } = useActiveWeb3React()
   const [formState, setFormState] = useState(defaultState)
-  const socksController = useSocksController()
+  const signer = library.getSigner()
+  const socksController = useSocksController().connect(signer)
    
   function handleChange(event: { target: { name: any; value: any } }) {
     const { name, value } = event.target
@@ -200,42 +199,34 @@ export default function SocksBalanceContent({ setShowSocksRedeemModal }: { setSh
                     ${nameMap[qty]} : ${formState[qty]}
                   `
                   const amountToBurn = formState[qty].toString()
-
-                  // The following should be put in a separate method
-                  const gasPrice = await library.getGasPrice()
-                  const estimatedGasPrice = gasPrice
-                    .mul(ethers.BigNumber.from(150))
-                    .div(ethers.BigNumber.from(100))
                   const parsedAmount = ethers.utils.parseUnits(amountToBurn, 18)
-                  const estimatedGasLimit = await socksController.estimateGas.burn(parsedAmount)
-                  const response = await socksController.functions.burn(parsedAmount, {
-                    gasLimit: calculateGasMargin(estimatedGasLimit, GAS_MARGIN),
-                    gasPrice: estimatedGasPrice
-                  })
+                  const response = await socksController.burn(parsedAmount)
 
-                  console.log(`hash: ${response.hash}`)
+                  response.wait().then(async (rsp: any) => {
+                      const autoMessage = `${nameMap[ethAddress]}: ${account}\n${nameMap[timeStamp]}: ${timestampToSign}\n${nameMap[numberBurned]}: ${amountToBurn}` // Todo: amount to burn needs to be replaced with actual burnt
 
-                  const autoMessage = `${nameMap[ethAddress]}: ${account}\n${nameMap[timeStamp]}: ${timestampToSign}\n${nameMap[numberBurned]}: ${amountToBurn}` // Todo: amount to burn needs to be replaced with actual burnt
+                      var signature = await signer
+                        .signMessage(`${header}\n\n${formDataMessage}\n${autoMessage}`)
+    
+                      var postResponse = await fetch('/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: encode({
+                          'form-name': 'redeem',
+                          ...{
+                            ...formState,
+                            'address': account,
+                            'timestamp': timestampToSign,
+                            'numberBurned': parsedAmount,
+                            'signature': signature
+                        }
+                      })
+                    })
 
-                  var signature = await signer
-                    .signMessage(`${header}\n\n${formDataMessage}\n${autoMessage}`)
-
-                  // Will probably need to pass in actual URL of endpoint instead of '/'
-                  await fetch('/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: encode({
-                      'form-name': 'redeem',
-                      ...{
-                        ...formState,
-                        'address': account,
-                        'timestamp': timestampToSign,
-                        'numberBurned': amountToBurn, // Todo: need actual amount burned
-                        'signature': signature,
-                        //...(recaptchaEnabled ? { 'g-recaptcha-response': recaptcha } : {})
+                    if (!postResponse.ok) {
+                      // TODO: Show dialog telling user to send an eamil to unisocks team
                     }
                   })
-                })
               }
               }>
                 Confirm purchase
